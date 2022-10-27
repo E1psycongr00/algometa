@@ -2,6 +2,9 @@ plugins {
 	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'java'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
+	id 'groovy'
+	id 'jacoco'
 }
 
 group = 'com.lhgpds'
@@ -12,15 +15,26 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExtensions
 }
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
+}
+
+jacoco {
+	toolVersion = '0.8.7'
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
 	// spring
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-aop:2.7.5'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	// Oauth2
@@ -50,11 +64,84 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-	// test
+	// spock
+	testImplementation 'org.spockframework.spock:spock-core:spock-2.3'
+	testImplementation 'org.spockframework.spock:spock-spring:spock-2.3'
+
+	// rest docs
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled(true)
+		xml.enabled(true)
+		csv.enabled(false)
+	}
+	dependsOn test
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it,
+					excludes: [] + ["**/mapper", "**/dto", "**/oauth2"])
+		}))
+	}
+
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			enabled = true
+			element = 'CLASS' // 클래스 단위로 커버리지 체크
+
+//			// 라인 커버리지 제한을 50% 설정
+//			limit {
+//				counter = 'LINE'
+//				value = 'COVEREDRATIO'
+//				minimum = 0.2
+//			}
+
+			// 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
+			limit {
+				counter = 'LINE'
+				value = 'TOTALCOUNT'
+				maximum = 200
+			}
+			excludes = [] + ["**/mapper", "/**/dto", "/**/oauth2"]
+		}
 
 
+	}
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExtensions'
+	dependsOn test
+
+	sources {
+		include("index.adoc")
+	}
+
+	baseDirFollowsSourceDir()
+}
+
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
 }
 
 tasks.named('test') {
+	outputs.dir snippetsDir
 	useJUnitPlatform()
+	finalizedBy 'jacocoTestReport'
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from('build/docs/asciidoc/') {
+		into 'static/docs'
+	}
 }
