@@ -3,7 +3,7 @@ package com.lhgpds.algometa.configuration.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhgpds.algometa.controller.auth.dto.TokenDto;
 import com.lhgpds.algometa.exception.common.DuplicateException;
-import com.lhgpds.algometa.internal.auth.jwt.service.TokenService;
+import com.lhgpds.algometa.internal.auth.jwt.service.JwtTokenService;
 import com.lhgpds.algometa.internal.member.service.MemberService;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import com.lhgpds.algometa.mapper.OAuth2Mapper;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    private final TokenService tokenService;
+    private final JwtTokenService tokenService;
     private final ObjectMapper objectMapper;
 
     private final MemberService memberService;
@@ -66,6 +66,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             Authentication responseAuthentication = makeResponseAuthentication(existedMember);
             TokenDto token = tokenService.generateToken(responseAuthentication);
             writeTokenResponse(response, token, false);
+            SecurityContextHolder.clearContext();
         }
 
     }
