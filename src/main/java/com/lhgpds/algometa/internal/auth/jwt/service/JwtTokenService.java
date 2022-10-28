@@ -19,13 +19,13 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class TokenService {
+public class JwtTokenService {
 
     private static final String BEARER_TYPE = "bearer";
     private final Key secretKey;
     JwtProperties jwtProperties;
 
-    public TokenService(JwtProperties jwtProperties) {
+    public JwtTokenService(JwtProperties jwtProperties) {
         byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecretKey());
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
         this.jwtProperties = jwtProperties;

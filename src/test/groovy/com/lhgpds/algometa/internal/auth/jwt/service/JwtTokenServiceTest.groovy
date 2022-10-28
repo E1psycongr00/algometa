@@ -19,11 +19,11 @@ import spock.lang.Specification
 
 
 @SpringJUnitConfig(Config.class)
-@Import(TokenService.class)
-class TokenServiceTest extends Specification {
+@Import(JwtTokenService.class)
+class JwtTokenServiceTest extends Specification {
 
     @Autowired
-    TokenService tokenService
+    JwtTokenService tokenService
 
     def authorities = Collections.singleton(new SimpleGrantedAuthority(Role.GHOST.roleName))
 
