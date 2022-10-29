@@ -2,13 +2,15 @@ package com.lhgpds.algometa.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lhgpds.algometa.exception.common.BusinessException;
-import com.lhgpds.algometa.exception.dto.ResponseErrorDto;
+import com.lhgpds.algometa.exception.dto.ResponseError;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -25,14 +27,14 @@ public class GlobalExceptionAdvice {
      *
      * @param e                  예외 객체
      * @param httpServletRequest 컨트롤러에 전송된 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    private ResponseEntity<ResponseErrorDto> handleMethodMissingServletRequestParameterException(
+    private ResponseEntity<ResponseError> handleMethodMissingServletRequestParameterException(
         MissingServletRequestParameterException e, HttpServletRequest httpServletRequest) {
 
         log.error(e.getClass().getSimpleName(), e.getMessage());
-        ResponseErrorDto errorResponse = ResponseErrorDto.of(ErrorCode.INVALID_INPUT_VALUE,
+        ResponseError errorResponse = ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
             httpServletRequest.getRequestURI());
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -42,14 +44,14 @@ public class GlobalExceptionAdvice {
      *
      * @param e                  예외 객체
      * @param httpServletRequest 컨트롤러에 전송된 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<ResponseErrorDto> handleMethodArgumentNotValidException(
+    private ResponseEntity<ResponseError> handleMethodArgumentNotValidException(
         MethodArgumentNotValidException e, HttpServletRequest httpServletRequest) {
         log.error(e.getClass().getSimpleName(), e.getMessage());
 
-        ResponseErrorDto errorResponse = ResponseErrorDto.of(ErrorCode.INVALID_INPUT_VALUE,
+        ResponseError errorResponse = ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
             e.getBindingResult(), httpServletRequest.getRequestURI());
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -59,14 +61,14 @@ public class GlobalExceptionAdvice {
      *
      * @param e                  예외 객체
      * @param httpServletRequest 서버로 보낸 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    private ResponseEntity<ResponseErrorDto> handleMethodArgumentTypeMismatchException(
+    private ResponseEntity<ResponseError> handleMethodArgumentTypeMismatchException(
         MethodArgumentTypeMismatchException e, HttpServletRequest httpServletRequest) {
         log.error(e.getClass().getSimpleName(), e.getMessage());
 
-        ResponseErrorDto errorResponse = ResponseErrorDto.of(e, httpServletRequest.getRequestURI());
+        ResponseError errorResponse = ResponseError.of(e, httpServletRequest.getRequestURI());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
@@ -75,14 +77,14 @@ public class GlobalExceptionAdvice {
      *
      * @param e                  예외 객체
      * @param httpServletRequest 서버로 보낸 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    private ResponseEntity<ResponseErrorDto> handleMethodNotAllowedException(
+    private ResponseEntity<ResponseError> handleMethodNotAllowedException(
         HttpRequestMethodNotSupportedException e, HttpServletRequest httpServletRequest) {
         log.error(e.getClass().getSimpleName(), e);
 
-        ResponseErrorDto errorResponse = ResponseErrorDto.of(ErrorCode.METHOD_NOT_ALLOWED,
+        ResponseError errorResponse = ResponseError.of(ErrorCode.METHOD_NOT_ALLOWED,
             "Allow: " + Arrays.toString(e.getSupportedMethods()),
             httpServletRequest.getRequestURI());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
@@ -94,39 +96,74 @@ public class GlobalExceptionAdvice {
      *
      * @param e                  예외 객체
      * @param httpServletRequest 서버로 보낸 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler({HttpMessageNotReadableException.class})
-    private ResponseEntity<ResponseErrorDto> handleHttpMessageNotReadableException(
+    private ResponseEntity<ResponseError> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e, HttpServletRequest httpServletRequest) {
         log.error(e.getClass().getSimpleName());
 
         if (e.getRootCause() instanceof InvalidFormatException) {
             InvalidFormatException invalidFormatException = (InvalidFormatException) e.getRootCause();
             return ResponseEntity.badRequest()
-                .body(ResponseErrorDto.of(invalidFormatException,
+                .body(ResponseError.of(invalidFormatException,
                     httpServletRequest.getRequestURI()));
         }
 
         return ResponseEntity.badRequest()
-            .body(ResponseErrorDto.of(ErrorCode.INVALID_INPUT_VALUE,
+            .body(ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
                 httpServletRequest.getRequestURI()));
     }
 
+    /**
+     * > AccessDeniedException이 발생하면 오류를 기록하고 오류 코드 FORBIDDEN 및 요청 URI를
+     * 사용하여 ResponseError 개체를 만들고 403 반환
+     *
+     * @param e 예외 객체
+     * @param httpServletRequest 서버에 대한 요청 개체
+     * @return ResponseEntity<ResponseError>
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    private ResponseEntity<ResponseError> handleAccessDeniedException(AccessDeniedException e,
+        HttpServletRequest httpServletRequest) {
+
+        log.error(e.getClass().getSimpleName());
+        ResponseError errorResponse = ResponseError.of(ErrorCode.FORBIDDEN,
+            httpServletRequest.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+
+    /**
+     * > Jwt 토큰 인증 처리시 DB에 user가 없다면 발생하는 예외를 처리함
+     *
+     * @param e 예외 객체
+     * @param httpServletRequest 서버에 대한 요청 개체
+     * @return ResponseEntity<ResponseError>
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    private ResponseEntity<ResponseError> handleUsernameNotFoundException(
+        UsernameNotFoundException e, HttpServletRequest httpServletRequest) {
+
+        log.error(e.getClass().getSimpleName());
+        ResponseError errorResponse = ResponseError.of(ErrorCode.RESOURCE_NOT_FOUND,
+            httpServletRequest.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
 
     /**
      * > 비즈니스 계층에서 발생한 예외를 처리하고 오류 코드 및 메시지가 포함된 응답을 반환
      *
      * @param e                  예외 객체
      * @param httpServletRequest 서버로 보낸 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler(BusinessException.class)
-    private ResponseEntity<ResponseErrorDto> handleBusinessException(BusinessException e,
+    private ResponseEntity<ResponseError> handleBusinessException(BusinessException e,
         HttpServletRequest httpServletRequest) {
         log.error(e.getClass().getSimpleName(), e.getMessage());
 
-        ResponseErrorDto responseErrorDto = ResponseErrorDto.of(e.getErrorCode(), e.getMessage(),
+        ResponseError responseErrorDto = ResponseError.of(e.getErrorCode(), e.getMessage(),
             httpServletRequest.getRequestURI());
         return ResponseEntity.status(e.getErrorCode().getCode()).body(responseErrorDto);
     }
@@ -134,16 +171,17 @@ public class GlobalExceptionAdvice {
     /**
      * > 핸들링한 예외 이외의 예외는 500 응답을 반환
      *
-     * @param e 예외 객체
+     * @param e                  예외 객체
      * @param httpServletRequest 서버로 보낸 요청 개체
-     * @return ResponseEntity<ResponseErrorDto>
+     * @return ResponseEntity<ResponseError>
      */
     @ExceptionHandler(Exception.class)
-    private ResponseEntity<ResponseErrorDto> handleException(Exception e,
+    private ResponseEntity<ResponseError> handleException(Exception e,
         HttpServletRequest httpServletRequest) {
-        log.error(e.getClass().getName(), e);
 
-        ResponseErrorDto errorResponse = ResponseErrorDto.of(ErrorCode.INTERNAL_SERVER_ERROR,
+        log.error(e.getClass().getName(), e);
+        ResponseError errorResponse = ResponseError.of(ErrorCode.INTERNAL_SERVER_ERROR,
+            e.getMessage(),
             httpServletRequest.getRequestURI());
         return ResponseEntity.internalServerError().body(errorResponse);
     }
