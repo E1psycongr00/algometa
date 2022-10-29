@@ -2,7 +2,7 @@ package com.lhgpds.algometa.configuration.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhgpds.algometa.exception.ErrorCode;
-import com.lhgpds.algometa.exception.dto.ResponseErrorDto;
+import com.lhgpds.algometa.exception.dto.ResponseError;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public class DefaultAuthenticationEntryPoint implements AuthenticationEntryPoint
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        ResponseErrorDto responseErrorDto = ResponseErrorDto.of(ErrorCode.UNAUTHORIZED,
+        ResponseError responseErrorDto = ResponseError.of(ErrorCode.UNAUTHORIZED,
             authException.getMessage(),
             request.getRequestURI());
         String stringResponse = objectMapper.writeValueAsString(responseErrorDto);
