@@ -1,5 +1,6 @@
 package com.lhgpds.algometa.internal.member.entity;
 
+import com.lhgpds.algometa.internal.common.entity.DateBaseEntity;
 import com.lhgpds.algometa.internal.member.entity.vo.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "member")
-public class Member {
+public class Member extends DateBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
