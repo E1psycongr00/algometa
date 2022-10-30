@@ -24,6 +24,14 @@ spring:
             scope:
               - profile
 
+cloud:
+  aws:
+    s3:
+      bucket: 1234
+      accessKey: 1234
+      secretKey: 1234
+      region: ap-northeast-2
+
 jwt:
   secret-key: linkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgood
   token-period: 600000
