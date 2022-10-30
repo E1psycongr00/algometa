@@ -18,7 +18,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseErrorDto {
+public class ResponseError {
 
     private int code;
 
@@ -32,46 +32,46 @@ public class ResponseErrorDto {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<FieldError> errors;
 
-    private ResponseErrorDto(ErrorCode errorCode, String path) {
+    private ResponseError(ErrorCode errorCode, String path) {
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
         this.path = path;
     }
 
-    private ResponseErrorDto(ErrorCode errorCode, String details, String path) {
+    private ResponseError(ErrorCode errorCode, String details, String path) {
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
         this.details = details;
         this.path = path;
     }
 
-    private ResponseErrorDto(ErrorCode errorCode, List<FieldError> errors, String path) {
+    private ResponseError(ErrorCode errorCode, List<FieldError> errors, String path) {
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
         this.errors = errors;
         this.path = path;
     }
 
-    public static ResponseErrorDto of(ErrorCode errorCode, String path) {
-        return new ResponseErrorDto(errorCode, path);
+    public static ResponseError of(ErrorCode errorCode, String path) {
+        return new ResponseError(errorCode, path);
     }
 
-    public static ResponseErrorDto of(ErrorCode errorCode, String details, String path) {
-        return new ResponseErrorDto(errorCode, details, path);
+    public static ResponseError of(ErrorCode errorCode, String details, String path) {
+        return new ResponseError(errorCode, details, path);
     }
 
-    public static ResponseErrorDto of(ErrorCode errorCode, BindingResult bindingResult,
+    public static ResponseError of(ErrorCode errorCode, BindingResult bindingResult,
         String path) {
-        return new ResponseErrorDto(errorCode, FieldError.ofBindResults(bindingResult), path);
+        return new ResponseError(errorCode, FieldError.ofBindResults(bindingResult), path);
     }
 
-    public static ResponseErrorDto of(MethodArgumentTypeMismatchException e, String path) {
-        return new ResponseErrorDto(ErrorCode.INVALID_TYPE_VALUE,
+    public static ResponseError of(MethodArgumentTypeMismatchException e, String path) {
+        return new ResponseError(ErrorCode.INVALID_TYPE_VALUE,
             Collections.singletonList(FieldError.ofTypeMisMatch(e)), path);
     }
 
-    public static ResponseErrorDto of(InvalidFormatException e, String path) {
-        return new ResponseErrorDto(ErrorCode.INVALID_TYPE_VALUE,
+    public static ResponseError of(InvalidFormatException e, String path) {
+        return new ResponseError(ErrorCode.INVALID_TYPE_VALUE,
             Collections.singletonList(FieldError.ofInvalidFormat(e)), path);
     }
 
