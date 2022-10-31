@@ -159,6 +159,34 @@ class MemberServiceImplTest extends Specification {
         output.image == entity.getImage()
     }
 
+    def "updateProfile - 닉네임을 요청하지 않은 경우"() {
+        given:
+        def userInfo = MemberDto.builder()
+                .id(1L)
+                .email("helloworld@naver.com")
+                .build()
+        def request = MemberDto.builder()
+                .image("image")
+                .build()
+        def entity = Member.builder()
+                .id(userInfo.getId())
+                .email(userInfo.getEmail())
+                .nickname("beforeName")
+                .image(request.getImage())
+                .role(Role.GHOST)
+                .build()
+        memberRepository.findById(_ as Long) >> Optional.of(entity)
+        when:
+        def output = memberService.updateProfile(userInfo, request)
+
+        then:
+        output.role == Role.USER
+        output.id == entity.getId()
+        output.nickname != null
+        output.email == entity.getEmail()
+        output.image == entity.getImage()
+    }
+
     def "updateImage - 회원이 존재하지 않는 경우"() {
         given:
         def userInfo = MemberDto.builder().id(1L).build()
