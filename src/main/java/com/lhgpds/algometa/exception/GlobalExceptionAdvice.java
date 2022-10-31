@@ -17,6 +17,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @Slf4j
@@ -163,6 +164,24 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(MissingServletRequestPartException.class)
     private ResponseEntity<ResponseError> handleMissingServletRequestPartException(
         MissingServletRequestPartException e, HttpServletRequest httpServletRequest) {
+
+        log.error(e.getClass().getSimpleName());
+        ResponseError errorResponse = ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
+            httpServletRequest.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    /**
+     * > 업로드 사이즈를 초과한 경우 예외를 처리하고 `ResponseError` 본문과 함께 `ResponseEntity`를 반환
+     *
+     * @param e                  예외 객체
+     * @param httpServletRequest 서버에 대한 요청 개체
+     * @return ResponseEntity<ResponseError>
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    private ResponseEntity<ResponseError> handleMaxUploadSizeExceededException(
+        MaxUploadSizeExceededException e, HttpServletRequest httpServletRequest
+    ) {
 
         log.error(e.getClass().getSimpleName());
         ResponseError errorResponse = ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
