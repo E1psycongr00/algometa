@@ -8,9 +8,13 @@ import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
  */
 public interface MemberService {
 
-    MemberDto join(MemberDto memberDto);
+    MemberDto join(MemberDto request);
 
-    MemberDto findByEmail(MemberDto memberDto);
+    MemberDto findByEmail(MemberDto request);
 
-    MemberDto updateProfile(MemberDto userInfoDto, MemberDto memberDto);
+    MemberDto findById(MemberDto request);
+
+    MemberDto updateProfile(MemberDto userInfoDto, MemberDto reqeust);
+
+    MemberDto updateImage(MemberDto userInfo, MemberDto request);
 }
