@@ -56,9 +56,6 @@ public class MemberServiceImpl implements MemberService {
         if (request.getNickname() != null) {
             entity.setNickname(request.getNickname());
         }
-        if (request.getImage() != null) {
-            entity.setImage(request.getImage());
-        }
         entity.setRole(Role.USER);
         return MemberMapper.instance.convertToMemberDto(entity);
     }
