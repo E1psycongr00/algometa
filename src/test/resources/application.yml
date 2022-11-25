@@ -27,6 +27,8 @@ spring:
             redirectUri: 1234
             scope:
               - profile
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 cloud:
   aws:
