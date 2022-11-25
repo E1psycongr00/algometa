@@ -2,6 +2,7 @@ package com.lhgpds.algometa.controller.member;
 
 import com.lhgpds.algometa.controller.common.dto.ResponseCommon;
 import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
+import com.lhgpds.algometa.controller.member.dto.ResponseMyProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseUploadImage;
 import com.lhgpds.algometa.infra.s3.S3Uploader;
@@ -77,6 +78,7 @@ public class MemberController {
 
     /**
      * > ID를 통해 회원 프로필을 조회하는 API
+     *
      * @param id PathVariable member id
      * @return ResponseEntity<ResponseProfile>
      */
@@ -91,4 +93,19 @@ public class MemberController {
         return ResponseEntity.ok(responseProfile);
     }
 
+    /**
+     * 로그인 이후 회원의 정보를 가져오는 API
+     *
+     * @param algoUser UserPrincipal
+     * @return ResponseEntity<ResponseProfile>
+     */
+    @Secured("ROLE_GHOST")
+    @GetMapping("/me")
+    public ResponseEntity<ResponseMyProfile> findMyProfile(
+        @AuthenticationPrincipal AlgoUser algoUser) {
+
+        MemberDto userInfo = algoUser.getMemberDto();
+        ResponseMyProfile response = MemberMapper.instance.convertToResponseMyProfile(userInfo);
+        return ResponseEntity.ok(response);
+    }
 }
