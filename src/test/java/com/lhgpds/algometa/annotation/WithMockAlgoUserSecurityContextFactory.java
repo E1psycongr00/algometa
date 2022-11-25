@@ -2,6 +2,7 @@ package com.lhgpds.algometa.annotation;
 
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,8 @@ public class WithMockAlgoUserSecurityContextFactory implements
             .nickname(customAlgoUser.nickname())
             .image(customAlgoUser.image())
             .role(customAlgoUser.role())
+            .createdAt(LocalDateTime.now())
+            .modifiedAt(LocalDateTime.now())
             .build();
         Collection<? extends GrantedAuthority> authorities = Collections.singletonList(
             new SimpleGrantedAuthority(customAlgoUser.role().getRoleName())
