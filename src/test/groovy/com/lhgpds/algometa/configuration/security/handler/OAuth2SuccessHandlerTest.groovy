@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.oauth2.core.user.OAuth2User
 import spock.lang.Specification
 
+import javax.servlet.http.Cookie
+
 class OAuth2SuccessHandlerTest extends Specification {
 
     MockHttpServletRequest httpServletRequest
@@ -60,9 +62,9 @@ class OAuth2SuccessHandlerTest extends Specification {
         oAuth2SuccessHandler.onAuthenticationSuccess(httpServletRequest,
                 httpServletResponse, authentication)
 
-        then: "http 상태 CREATED 및 responseBody가 tokenDto 타입인지 확인"
-        httpServletResponse.getStatus() == HttpStatus.CREATED.value()
-        objectMapper.readValue(httpServletResponse.getContentAsString(), TokenDto.class)
+        then: "response에 쿠키가 등록되었는지 확인"
+        httpServletResponse.getCookie("access_token") != null
+
 
     }
 
@@ -91,9 +93,7 @@ class OAuth2SuccessHandlerTest extends Specification {
         oAuth2SuccessHandler.onAuthenticationSuccess(httpServletRequest,
                 httpServletResponse, authentication)
 
-        then: "http 상태 OK 및 responseBody가 tokenDto 타입인지 확인"
-        httpServletResponse.getStatus() == HttpStatus.OK.value()
-        objectMapper.readValue(httpServletResponse.getContentAsString(), TokenDto.class)
-
+        then: "response에 쿠키가 등록되었는지 확인"
+        httpServletResponse.getCookie("access_token") != null
     }
 }
