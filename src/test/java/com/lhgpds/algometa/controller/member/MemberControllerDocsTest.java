@@ -50,6 +50,7 @@ class MemberControllerDocsTest {
     private static final String MEMBER_DOMAIN_URI = "/api/v1/members";
     private static final String POST_USER_INFO_URI = MEMBER_DOMAIN_URI + "/info";
     private static final String POST_USER_IMAGE_URI = MEMBER_DOMAIN_URI + "/images";
+    private static final String GET_USER_MY_PROFILE_URI = MEMBER_DOMAIN_URI + "/me";
 
     @MockBean
     MemberService memberService;
@@ -89,20 +90,20 @@ class MemberControllerDocsTest {
             .build();
         Mockito.doReturn(memberDto).when(memberService).findById(any());
 
-            // expect:
-            mockMvc.perform(get(MEMBER_DOMAIN_URI + "/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").exists())
-                .andExpect(jsonPath("$.image").exists())
-                .andExpect(jsonPath("$.nickname").exists())
-                .andDo(document("get-members/{id}",
-                    preprocessRequest(prettyPrint()),
-                    preprocessResponse(prettyPrint()),
-                    responseFields(
-                        fieldWithPath("email").description("email"),
-                        fieldWithPath("nickname").description("nickname"),
-                        fieldWithPath("image").description("image"))
-                ));
+        // expect:
+        mockMvc.perform(get(MEMBER_DOMAIN_URI + "/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.email").exists())
+            .andExpect(jsonPath("$.image").exists())
+            .andExpect(jsonPath("$.nickname").exists())
+            .andDo(document("get-members/{id}",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                    fieldWithPath("email").description("email"),
+                    fieldWithPath("nickname").description("nickname"),
+                    fieldWithPath("image").description("image"))
+            ));
     }
 
     @Nested
@@ -160,8 +161,33 @@ class MemberControllerDocsTest {
                     .content(objectMapper.writeValueAsString(requestUpdateProfile)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.createdAt").exists())
-                .andExpect(jsonPath("$.modifiedAt").exists());
+                .andExpect(jsonPath("$.created_at").exists())
+                .andExpect(jsonPath("$.modified_at").exists());
+        }
+
+        @Nested
+        @DisplayName("유저 본인 요청 API 테스트")
+        class FindMyProfile {
+
+            private static final String VALID_NICKNAME = "가오가이거1214";
+
+            @Test
+            @WithMockAlgoUser
+            void responseFormatWhenSuccessTest() throws Exception {
+                // given:
+
+                // expect
+                mockMvc.perform(get(GET_USER_MY_PROFILE_URI))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").exists())
+                    .andExpect(jsonPath("$.email").exists())
+                    .andExpect(jsonPath("$.nickname").exists())
+
+                    .andExpect(jsonPath("$.image").exists())
+                    .andExpect(jsonPath("$.role").exists())
+                    .andExpect(jsonPath("$.created_at").exists())
+                    .andExpect(jsonPath("$.modified_at").exists());
+            }
         }
     }
 }
