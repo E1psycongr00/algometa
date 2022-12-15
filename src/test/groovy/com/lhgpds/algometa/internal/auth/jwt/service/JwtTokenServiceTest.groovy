@@ -2,7 +2,7 @@ package com.lhgpds.algometa.internal.auth.jwt.service
 
 import com.lhgpds.algometa.controller.auth.dto.TokenDto
 import com.lhgpds.algometa.internal.auth.jwt.JwtProperties
-import com.lhgpds.algometa.internal.member.entity.vo.Role
+import com.lhgpds.algometa.internal.member.domain.vo.Role
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import org.springframework.beans.factory.annotation.Autowired

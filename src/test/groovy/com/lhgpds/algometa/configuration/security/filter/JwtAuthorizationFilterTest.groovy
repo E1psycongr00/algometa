@@ -3,7 +3,7 @@ package com.lhgpds.algometa.configuration.security.filter
 import com.lhgpds.algometa.configuration.security.handler.DefaultAuthenticationEntryPoint
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser
 import com.lhgpds.algometa.internal.auth.jwt.service.JwtTokenService
-import com.lhgpds.algometa.internal.member.entity.vo.Role
+import com.lhgpds.algometa.internal.member.domain.vo.Role
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts

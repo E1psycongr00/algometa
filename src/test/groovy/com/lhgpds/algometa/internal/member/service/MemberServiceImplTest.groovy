@@ -2,8 +2,8 @@ package com.lhgpds.algometa.internal.member.service
 
 import com.lhgpds.algometa.exception.common.DuplicateException
 import com.lhgpds.algometa.exception.common.NotFoundException
-import com.lhgpds.algometa.internal.member.entity.Member
-import com.lhgpds.algometa.internal.member.entity.vo.Role
+import com.lhgpds.algometa.internal.member.domain.entity.Member
+import com.lhgpds.algometa.internal.member.domain.vo.Role
 import com.lhgpds.algometa.internal.member.repository.MemberRepository
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto
 import spock.lang.Specification

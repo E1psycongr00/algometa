@@ -1,6 +1,6 @@
 package com.lhgpds.algometa.internal.member.service.dto;
 
-import com.lhgpds.algometa.internal.member.entity.vo.Role;
+import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

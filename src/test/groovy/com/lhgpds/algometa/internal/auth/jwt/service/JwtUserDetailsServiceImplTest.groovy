@@ -1,8 +1,8 @@
 package com.lhgpds.algometa.internal.auth.jwt.service
 
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser
-import com.lhgpds.algometa.internal.member.entity.Member
-import com.lhgpds.algometa.internal.member.entity.vo.Role
+import com.lhgpds.algometa.internal.member.domain.entity.Member
+import com.lhgpds.algometa.internal.member.domain.vo.Role
 import com.lhgpds.algometa.internal.member.repository.MemberRepository
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import spock.lang.Specification

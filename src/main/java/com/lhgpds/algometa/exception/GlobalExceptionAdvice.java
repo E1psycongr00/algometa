@@ -223,6 +223,4 @@ public class GlobalExceptionAdvice {
             httpServletRequest.getRequestURI());
         return ResponseEntity.internalServerError().body(errorResponse);
     }
-
-
 }

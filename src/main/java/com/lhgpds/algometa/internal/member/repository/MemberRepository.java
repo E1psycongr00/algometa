@@ -1,6 +1,6 @@
 package com.lhgpds.algometa.internal.member.repository;
 
-import com.lhgpds.algometa.internal.member.entity.Member;
+import com.lhgpds.algometa.internal.member.domain.entity.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

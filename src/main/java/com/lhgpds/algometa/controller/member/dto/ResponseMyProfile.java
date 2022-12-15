@@ -1,7 +1,7 @@
 package com.lhgpds.algometa.controller.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lhgpds.algometa.internal.member.entity.vo.Role;
+import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

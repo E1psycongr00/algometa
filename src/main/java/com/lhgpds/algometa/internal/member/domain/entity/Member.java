@@ -1,7 +1,7 @@
-package com.lhgpds.algometa.internal.member.entity;
+package com.lhgpds.algometa.internal.member.domain.entity;
 
 import com.lhgpds.algometa.internal.common.entity.DateBaseEntity;
-import com.lhgpds.algometa.internal.member.entity.vo.Role;
+import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

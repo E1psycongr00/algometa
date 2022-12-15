@@ -6,7 +6,7 @@ import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseMyProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseUploadImage;
-import com.lhgpds.algometa.internal.member.entity.Member;
+import com.lhgpds.algometa.internal.member.domain.entity.Member;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -22,9 +22,6 @@ public interface MemberMapper {
     MemberDto convertToMemberDto(Member entity);
 
     MemberDto convertToMemberDto(RequestUpdateProfile entity);
-
-    ResponseProfile convertToResponseUpdateProfileWithToken(MemberDto memberDto,
-        TokenDto jwtToken);
 
     ResponseProfile convertToResponseUpdateProfile(MemberDto memberDto);
 

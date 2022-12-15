@@ -1,7 +1,7 @@
 package com.lhgpds.algometa.internal.auth.jwt.service;
 
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
-import com.lhgpds.algometa.internal.member.entity.Member;
+import com.lhgpds.algometa.internal.member.domain.entity.Member;
 import com.lhgpds.algometa.internal.member.repository.MemberRepository;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import com.lhgpds.algometa.mapper.MemberMapper;

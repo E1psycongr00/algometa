@@ -20,7 +20,7 @@ import com.lhgpds.algometa.annotation.WithMockAlgoUser;
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter;
 import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
 import com.lhgpds.algometa.infra.s3.S3Uploader;
-import com.lhgpds.algometa.internal.member.entity.vo.Role;
+import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import com.lhgpds.algometa.internal.member.service.MemberService;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import java.time.LocalDateTime;
