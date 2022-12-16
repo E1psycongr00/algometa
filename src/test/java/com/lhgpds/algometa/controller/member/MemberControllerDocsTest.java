@@ -20,6 +20,9 @@ import com.lhgpds.algometa.annotation.WithMockAlgoUser;
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter;
 import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
 import com.lhgpds.algometa.infra.s3.S3Uploader;
+import com.lhgpds.algometa.internal.member.domain.vo.Email;
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
+import com.lhgpds.algometa.internal.member.domain.vo.Nickname;
 import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import com.lhgpds.algometa.internal.member.service.MemberService;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
@@ -83,9 +86,9 @@ class MemberControllerDocsTest {
         // given:
         MemberDto memberDto = MemberDto.builder()
             .id(1L)
-            .nickname("hello")
-            .image("s3")
-            .email("hello@naver.com")
+            .nickname(Nickname.from("hello"))
+            .image(ImageLink.from("s3"))
+            .email(Email.from("hello@naver.com"))
             .role(Role.USER)
             .build();
         Mockito.doReturn(memberDto).when(memberService).findById(any());
@@ -122,8 +125,8 @@ class MemberControllerDocsTest {
                 MediaType.IMAGE_JPEG_VALUE,
                 "Hello, World!".getBytes()
             );
-            Mockito.doReturn(VALID_S3_IMAGE_LINK).when(s3Uploader).upload(any(), any());
-            MemberDto output = MemberDto.builder().image(VALID_S3_IMAGE_LINK).build();
+            Mockito.doReturn(ImageLink.from(VALID_S3_IMAGE_LINK)).when(s3Uploader).upload(any(), any());
+            MemberDto output = MemberDto.builder().image(ImageLink.from(VALID_S3_IMAGE_LINK)).build();
             Mockito.doReturn(output).when(memberService).updateImage(any(), any());
 
             // expect:
@@ -146,9 +149,9 @@ class MemberControllerDocsTest {
             RequestUpdateProfile requestUpdateProfile = RequestUpdateProfile.builder()
                 .nickname(VALID_NICKNAME).build();
             MemberDto output = MemberDto.builder()
-                .email("hello@naver.com")
+                .email(Email.from("hello@naver.com"))
                 .id(1L)
-                .nickname(VALID_NICKNAME)
+                .nickname(Nickname.from(VALID_NICKNAME))
                 .role(Role.USER)
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())

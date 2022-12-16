@@ -5,6 +5,9 @@ import com.lhgpds.algometa.annotation.WithMockAlgoUser
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter
 import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile
 import com.lhgpds.algometa.infra.s3.S3Uploader
+import com.lhgpds.algometa.internal.member.domain.vo.Email
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink
+import com.lhgpds.algometa.internal.member.domain.vo.Nickname
 import com.lhgpds.algometa.internal.member.service.MemberService
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -102,9 +105,15 @@ class ControllerTest extends Specification {
                 mediaType,
                 b
         )
+        memberService.updateImage(_ as MemberDto, _ as MemberDto) >> MemberDto.builder()
+                .nickname(Nickname.from("asdfa"))
+                .email(Email.from("asdf@naver.com"))
+                .image(ImageLink.from("s3s3"))
+                .build()
 
         expect:
-        mockMvc.perform(multipart(Uri.POST_USER_IMAGE_URI).file(file))
+        mockMvc.perform(multipart(Uri.POST_USER_IMAGE_URI)
+                .file(file))
                 .andExpect(status().is(statusResult))
 
         where:
@@ -112,5 +121,4 @@ class ControllerTest extends Specification {
         Request.INVALID_MULTIPART_KEY | "h.png"          | Request.PNG | 50       || 400
         Request.VALID_MULTIPART_KEY   | "h.png"          | Request.PNG | 500      || 201
     }
-
 }
