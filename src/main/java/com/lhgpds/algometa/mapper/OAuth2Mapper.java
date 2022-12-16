@@ -1,5 +1,6 @@
 package com.lhgpds.algometa.mapper;
 
+import com.lhgpds.algometa.internal.member.domain.vo.Email;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class OAuth2Mapper {
         }
         return MemberDto.builder()
             .id(id)
-            .email((String) attributes.get("email")).build();
+            .email(new Email((String) attributes.get("email"))).build();
     }
 
     public static OAuth2User convertOAuth2User(MemberDto memberDto) {
