@@ -25,6 +25,23 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 public class GlobalExceptionAdvice {
 
     /**
+     * > IllegalArgumentException이 발생하면 오류를 기록하고 ResponseError를 응답
+     *
+     * @param e 예외 객체
+     * @param httpServletRequest 컨트롤러로 전송된 요청 개체
+     * @return ResponseEntity<ResponseError>
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<ResponseError> handleIllegalArgumentException(IllegalArgumentException e,
+        HttpServletRequest httpServletRequest) {
+
+        log.error(e.getClass().getSimpleName(), e.getMessage());
+        ResponseError errorResponse = ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
+            httpServletRequest.getRequestURI());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    /**
      * > 요청에 매개변수가 없으면 오류 메시지와 함께 400 Bad Request 응답을 반환
      *
      * @param e                  예외 객체
