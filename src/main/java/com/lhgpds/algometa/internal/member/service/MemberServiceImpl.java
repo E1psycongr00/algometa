@@ -1,7 +1,7 @@
 package com.lhgpds.algometa.internal.member.service;
 
-import com.lhgpds.algometa.exception.common.DuplicateException;
-import com.lhgpds.algometa.exception.common.NotFoundException;
+import com.lhgpds.algometa.exception.common.member.MemberDuplicateException;
+import com.lhgpds.algometa.exception.common.member.MemberNotFoundException;
 import com.lhgpds.algometa.internal.member.domain.entity.Member;
 import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import com.lhgpds.algometa.internal.member.repository.MemberRepository;
@@ -23,26 +23,26 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDto join(MemberDto request) {
         if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateException("이미 회원이 존재합니다");
+            throw new MemberDuplicateException();
         }
-        request.setRole(Role.GHOST);
-        Member memberEntity = MemberMapper.instance.convertToEntity(request);
-        memberRepository.save(memberEntity);
-        return MemberMapper.instance.convertToMemberDto(memberEntity);
+        Member member = Member.createFirstJoinMember(request.getEmail(), request.getNickname());
+        memberRepository.save(member);
+        return MemberMapper.instance.convertToMemberDto(member);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public MemberDto findByEmail(MemberDto request) {
+        Member entity = memberRepository.findByEmail(request.getEmail())
+            .orElseThrow(MemberNotFoundException::new);
+        return MemberMapper.instance.convertToMemberDto(entity);
     }
 
     @Transactional
     @Override
-    public MemberDto findByEmail(MemberDto request) {
-        Member entity = memberRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다"));
-        return MemberMapper.instance.convertToMemberDto(entity);
-    }
-
-    @Override
     public MemberDto findById(MemberDto request) {
         Member entity = memberRepository.findById(request.getId())
-            .orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다"));
+            .orElseThrow(MemberNotFoundException::new);
         return MemberMapper.instance.convertToMemberDto(entity);
     }
 
@@ -51,25 +51,22 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto updateProfile(MemberDto userInfo, MemberDto request) {
         Member entity = memberRepository.findById(
                 userInfo.getId())
-            .orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다"));
+            .orElseThrow(MemberNotFoundException::new);
 
         if (request.getNickname() != null) {
             entity.setNickname(request.getNickname());
         }
-        entity.setRole(Role.USER);
+        entity.changeRole(Role.USER);
         return MemberMapper.instance.convertToMemberDto(entity);
     }
 
     @Transactional
     @Override
     public MemberDto updateImage(MemberDto userInfo, MemberDto request) {
-        Member entity = memberRepository.findById(
-            userInfo.getId()
-        ).orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다"));
+        Member entity = memberRepository.findById(userInfo.getId())
+            .orElseThrow(MemberNotFoundException::new);
         entity.setImage(request.getImage());
-        entity.setRole(Role.USER);
+        entity.changeRole(Role.USER);
         return MemberMapper.instance.convertToMemberDto(entity);
     }
-
-
 }
