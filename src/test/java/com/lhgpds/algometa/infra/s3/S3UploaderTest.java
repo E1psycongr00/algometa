@@ -8,6 +8,7 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
 import io.findify.s3mock.S3Mock;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
@@ -38,11 +39,11 @@ class S3UploaderTest {
             "test".getBytes());
 
         // when
-        String urlPath = s3Uploader.upload(file, dirName);
+        ImageLink urlPath = s3Uploader.upload(file, dirName);
 
         // then
-        assertThat(urlPath).contains(path);
-        assertThat(urlPath).contains(dirName);
+        assertThat(urlPath.toString()).contains(path);
+        assertThat(urlPath.toString()).contains(dirName);
 
         s3Mock.stop();
     }
