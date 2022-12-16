@@ -1,7 +1,11 @@
 package com.lhgpds.algometa.internal.member.service.dto;
 
+import com.lhgpds.algometa.internal.member.domain.vo.Email;
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
+import com.lhgpds.algometa.internal.member.domain.vo.Nickname;
 import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,14 +17,14 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class MemberDto {
 
     private Long id;
-    private String email;
-    private String nickname;
-    private String image;
+    private Email email;
+    private Nickname nickname;
+    private ImageLink image;
     private Role role;
 
     private LocalDateTime createdAt;
