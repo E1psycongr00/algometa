@@ -1,6 +1,9 @@
 package com.lhgpds.algometa.annotation;
 
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
+import com.lhgpds.algometa.internal.member.domain.vo.Email;
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
+import com.lhgpds.algometa.internal.member.domain.vo.Nickname;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -22,9 +25,9 @@ public class WithMockAlgoUserSecurityContextFactory implements
 
         MemberDto memberDto = MemberDto.builder()
             .id(customAlgoUser.id())
-            .email(customAlgoUser.email())
-            .nickname(customAlgoUser.nickname())
-            .image(customAlgoUser.image())
+            .email(new Email(customAlgoUser.email()))
+            .nickname(new Nickname(customAlgoUser.nickname()))
+            .image(new ImageLink(customAlgoUser.image()))
             .role(customAlgoUser.role())
             .createdAt(LocalDateTime.now())
             .modifiedAt(LocalDateTime.now())

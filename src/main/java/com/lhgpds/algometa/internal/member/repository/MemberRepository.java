@@ -1,13 +1,14 @@
 package com.lhgpds.algometa.internal.member.repository;
 
-import com.lhgpds.algometa.internal.member.entity.Member;
+import com.lhgpds.algometa.internal.member.domain.entity.Member;
+import com.lhgpds.algometa.internal.member.domain.vo.Email;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    boolean existsByEmail(String email);
+    boolean existsByEmail(Email email);
 
-    Optional<Member> findByEmail(String email);
+    Optional<Member> findByEmail(Email email);
 
 }

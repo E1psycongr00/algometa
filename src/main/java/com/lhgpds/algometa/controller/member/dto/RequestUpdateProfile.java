@@ -1,17 +1,18 @@
 package com.lhgpds.algometa.controller.member.dto;
 
-import com.lhgpds.algometa.validation.annotation.Nickname;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@ToString
 public class RequestUpdateProfile {
 
-    @Nickname
     private String nickname;
 }

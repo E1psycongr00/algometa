@@ -1,7 +1,7 @@
 package com.lhgpds.algometa.internal.auth.oauth2.service;
 
 import com.lhgpds.algometa.internal.auth.oauth2.OAuth2Attribute;
-import com.lhgpds.algometa.internal.member.entity.vo.Role;
+import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import java.util.Collections;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;

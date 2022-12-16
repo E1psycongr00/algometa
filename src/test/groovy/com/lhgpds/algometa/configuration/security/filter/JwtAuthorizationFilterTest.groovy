@@ -3,7 +3,8 @@ package com.lhgpds.algometa.configuration.security.filter
 import com.lhgpds.algometa.configuration.security.handler.DefaultAuthenticationEntryPoint
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser
 import com.lhgpds.algometa.internal.auth.jwt.service.JwtTokenService
-import com.lhgpds.algometa.internal.member.entity.vo.Role
+import com.lhgpds.algometa.internal.member.domain.vo.Email
+import com.lhgpds.algometa.internal.member.domain.vo.Role
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
@@ -100,7 +101,7 @@ class JwtAuthorizationFilterTest extends Specification {
         )
         MemberDto memberDto = MemberDto.builder()
                 .id(1L)
-                .email("helloworld@naver.com")
+                .email(Email.from("helloworld@naver.com"))
                 .build()
         jwtTokenService.parseClaims(_ as String) >> Jwts.claims(new HashMap<String, Object>())
         userDetailsService.loadUserByUsername(_) >> new AlgoUser(

@@ -1,15 +1,12 @@
 package com.lhgpds.algometa.configuration.security.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhgpds.algometa.controller.auth.dto.TokenDto;
-import com.lhgpds.algometa.exception.common.DuplicateException;
+import com.lhgpds.algometa.exception.common.member.MemberDuplicateException;
 import com.lhgpds.algometa.internal.auth.jwt.service.JwtTokenService;
 import com.lhgpds.algometa.internal.member.service.MemberService;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import com.lhgpds.algometa.mapper.OAuth2Mapper;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +58,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             writeTokenResponse(response, token, true);
             SecurityContextHolder.clearContext();
 
-        } catch (DuplicateException e) {
+        } catch (MemberDuplicateException e) {
             log.error(e.getClass().getSimpleName(), e.getMessage());
             MemberDto existedMember = memberService.findByEmail(memberDto);
             Authentication responseAuthentication = makeResponseAuthentication(existedMember);
@@ -73,7 +70,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private Authentication makeResponseAuthentication(MemberDto member) {
-        UserDetails principals = new User(member.getEmail(), "", Collections.singletonList(
+        //TODO toString 문제 해결해야함.
+        UserDetails principals = new User(member.getEmail().toString(), "", Collections.singletonList(
             new SimpleGrantedAuthority(member.getRole().getRoleName())
         ));
         return new UsernamePasswordAuthenticationToken(principals, "");
@@ -102,8 +100,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     private Cookie makeCookie(String key, String value) {
+        //TODO 쿠기 수명 관련 설정을 따로 빼야함.
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(5);
+        cookie.setMaxAge(1000);
         return cookie;
     }
 }

@@ -7,6 +7,7 @@ import com.lhgpds.algometa.controller.member.dto.ResponseProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseUploadImage;
 import com.lhgpds.algometa.infra.s3.S3Uploader;
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
 import com.lhgpds.algometa.internal.member.service.MemberService;
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
 import com.lhgpds.algometa.mapper.MemberMapper;
@@ -68,7 +69,7 @@ public class MemberController {
         @RequestParam("images") MultipartFile multipartFile)
         throws IOException {
         MemberDto userInfo = algoUser.getMemberDto();
-        String uploadImageLink = s3Uploader.upload(multipartFile, String.valueOf(userInfo.getId()));
+        ImageLink uploadImageLink = s3Uploader.upload(multipartFile, String.valueOf(userInfo.getId()));
         MemberDto requestDto = MemberDto.builder().image(uploadImageLink).build();
         MemberDto responseDto = memberService.updateImage(userInfo, requestDto);
         ResponseUploadImage responseUploadImage = MemberMapper.instance.convertToResponseUploadImage(

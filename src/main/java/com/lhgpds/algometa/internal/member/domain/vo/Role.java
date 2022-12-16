@@ -1,4 +1,4 @@
-package com.lhgpds.algometa.internal.member.entity.vo;
+package com.lhgpds.algometa.internal.member.domain.vo;
 
 
 import lombok.Getter;

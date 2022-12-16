@@ -2,12 +2,12 @@ package com.lhgpds.algometa.configuration.security.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.lhgpds.algometa.controller.auth.dto.TokenDto
-import com.lhgpds.algometa.exception.common.DuplicateException
+import com.lhgpds.algometa.exception.common.member.MemberDuplicateException
 import com.lhgpds.algometa.internal.auth.jwt.service.JwtTokenService
-import com.lhgpds.algometa.internal.member.entity.vo.Role
+import com.lhgpds.algometa.internal.member.domain.vo.Email
+import com.lhgpds.algometa.internal.member.domain.vo.Role
 import com.lhgpds.algometa.internal.member.service.MemberServiceImpl
 import com.lhgpds.algometa.internal.member.service.dto.MemberDto
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -17,8 +17,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.oauth2.core.user.OAuth2User
 import spock.lang.Specification
-
-import javax.servlet.http.Cookie
 
 class OAuth2SuccessHandlerTest extends Specification {
 
@@ -50,7 +48,7 @@ class OAuth2SuccessHandlerTest extends Specification {
 
         memberService.join(_ as MemberDto) >> MemberDto.builder()
                 .id(1L)
-                .email("helloworld@naver.com")
+                .email(Email.from("helloworld@naver.com"))
                 .role(Role.GHOST)
                 .build()
         tokenService.generateToken(_ as Authentication) >> TokenDto.builder()
@@ -77,11 +75,11 @@ class OAuth2SuccessHandlerTest extends Specification {
         Authentication authentication = new UsernamePasswordAuthenticationToken(oAuth2User, "")
 
         memberService.join(_ as MemberDto) >> { MemberDto memberDto ->
-            throw new DuplicateException("이미 회원이 존재합니다")
+            throw new MemberDuplicateException()
         }
         memberService.findByEmail(_ as MemberDto) >> MemberDto.builder()
                 .id(1L)
-                .email("helloworld@naver.com")
+                .email(Email.from("helloworld@naver.com"))
                 .role(Role.GHOST)
                 .build()
         tokenService.generateToken(_ as Authentication) >> TokenDto.builder()
