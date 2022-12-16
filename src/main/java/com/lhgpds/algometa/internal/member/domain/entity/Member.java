@@ -1,8 +1,12 @@
 package com.lhgpds.algometa.internal.member.domain.entity;
 
 import com.lhgpds.algometa.internal.common.entity.DateBaseEntity;
+import com.lhgpds.algometa.internal.member.domain.vo.Email;
+import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
+import com.lhgpds.algometa.internal.member.domain.vo.Nickname;
 import com.lhgpds.algometa.internal.member.domain.vo.Role;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,15 +14,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Builder
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "member")
 public class Member extends DateBaseEntity {
@@ -29,27 +34,36 @@ public class Member extends DateBaseEntity {
     private Long id;
 
     @Column(name = "email")
-    private String email;
+    @Embedded
+    private Email email;
 
     @Column(name = "nickname")
-    private String nickname;
+    private Nickname nickname;
 
     @Column(name = "image")
-    private String image;
+    private ImageLink image;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
 
-    public void setNickname(String nickname) {
+    public static Member createFirstJoinMember(Email email, Nickname nickname) {
+        return Member.builder()
+            .email(email)
+            .nickname(nickname)
+            .role(Role.GHOST)
+            .build();
+    }
+
+    public void setNickname(Nickname nickname) {
         this.nickname = nickname;
     }
 
-    public void setImage(String image) {
+    public void setImage(ImageLink image) {
         this.image = image;
     }
 
-    public void setRole(Role role) {
+    public void changeRole(Role role) {
         this.role = role;
     }
 }
