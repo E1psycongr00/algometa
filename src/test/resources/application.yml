@@ -14,9 +14,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: false
+        format_sql: true
       default_batch_fetch_size: 100
-    show-sql: false
+    show-sql: true
   security:
     oauth2:
       client:
@@ -27,9 +27,6 @@ spring:
             redirectUri: 1234
             scope:
               - profile
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
 cloud:
   aws:
     s3:
