@@ -48,10 +48,6 @@ public class Problem extends DateBaseEntity {
     protected Problem() {
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
     @Builder
     public Problem(ProblemId problemId, Content content, Code code, Platform platform,
         Set<Category> category, Long memberId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
@@ -63,6 +59,14 @@ public class Problem extends DateBaseEntity {
         this.memberId = memberId;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public void changeContent(Content content) {
+        this.content = content;
     }
 
     public History snapShotCode() {
