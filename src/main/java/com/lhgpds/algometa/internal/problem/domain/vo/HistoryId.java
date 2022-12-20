@@ -1,5 +1,7 @@
 package com.lhgpds.algometa.internal.problem.domain.vo;
 
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.impl.UUIDUtil;
 import com.lhgpds.algometa.configuration.jackson.vo.PrimitiveWrapper;
 import java.io.Serializable;
 import java.util.UUID;
@@ -13,23 +15,27 @@ public class HistoryId implements PrimitiveWrapper, Serializable {
 
     private static final long serialVersionUID = -194445827081148241L;
 
-    @Column(name = "history_id")
-    private String id;
+    @Column(name = "history_id", columnDefinition = "BINARY(16)")
+    private UUID id;
 
     protected HistoryId() {
     }
 
     public HistoryId(String id) {
+        this.id = UUIDUtil.uuid(id);
+    }
+
+    public HistoryId(UUID id) {
         this.id = id;
     }
 
     public static HistoryId nextProblemId() {
-        String uuid = UUID.randomUUID().toString();
+        String uuid = Generators.timeBasedGenerator().generate().toString();
         return new HistoryId(uuid);
     }
 
     @Override
     public String toString() {
-        return id;
+        return id.toString();
     }
 }
