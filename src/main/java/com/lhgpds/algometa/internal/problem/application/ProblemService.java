@@ -7,6 +7,7 @@ import com.lhgpds.algometa.internal.problem.application.utils.ProblemAuthorityCh
 import com.lhgpds.algometa.internal.problem.domain.entity.History;
 import com.lhgpds.algometa.internal.problem.domain.entity.Problem;
 import com.lhgpds.algometa.internal.problem.domain.vo.ProblemId;
+import com.lhgpds.algometa.internal.problem.domain.vo.code.Code;
 import com.lhgpds.algometa.internal.problem.domain.vo.content.Content;
 import com.lhgpds.algometa.internal.problem.repository.HistoryRepository;
 import com.lhgpds.algometa.internal.problem.repository.ProblemRepository;
@@ -34,11 +35,25 @@ public class ProblemService {
 
     @Transactional
     public ProblemDto updateProblemContent(long memberId, ProblemId problemId, Content content) {
+        Problem problem = getValidProblemEntity(memberId, problemId);
+        problem.changeContent(content);
+        return ProblemMapper.instance.toDto(problem);
+    }
+
+    @Transactional
+    public ProblemDto updateProblemCode(long memberId, ProblemId problemId, Code code) {
+        Problem problem = getValidProblemEntity(memberId, problemId);
+        problem.changeCode(code);
+        History history = problem.snapShotCode();
+        historyRepository.save(history);
+        return ProblemMapper.instance.toDto(problem);
+    }
+
+    private Problem getValidProblemEntity(long memberId, ProblemId problemId) {
         Problem problem = problemRepository.findById(problemId)
             .orElseThrow(ProblemNotFoundException::new);
         ProblemAuthorityChecker.check(memberId, problem);
-        problem.changeContent(content);
-        return ProblemMapper.instance.toDto(problem);
+        return problem;
     }
 
 }
