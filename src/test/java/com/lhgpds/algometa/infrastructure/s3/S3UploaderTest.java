@@ -1,4 +1,4 @@
-package com.lhgpds.algometa.infra.s3;
+package com.lhgpds.algometa.infrastructure.s3;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

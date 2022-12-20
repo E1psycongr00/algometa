@@ -1,4 +1,4 @@
-package com.lhgpds.algometa.infra.s3;
+package com.lhgpds.algometa.infrastructure.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;

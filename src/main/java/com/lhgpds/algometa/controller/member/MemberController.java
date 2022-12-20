@@ -5,7 +5,7 @@ import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseMyProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseUploadImage;
-import com.lhgpds.algometa.infra.s3.S3Uploader;
+import com.lhgpds.algometa.infrastructure.s3.S3Uploader;
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
 import com.lhgpds.algometa.internal.member.application.MemberService;

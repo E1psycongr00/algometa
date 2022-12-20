@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.lhgpds.algometa.annotation.WithMockAlgoUser
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter
 import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile
-import com.lhgpds.algometa.infra.s3.S3Uploader
+import com.lhgpds.algometa.infrastructure.s3.S3Uploader
 import com.lhgpds.algometa.internal.member.domain.vo.Email
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink
 import com.lhgpds.algometa.internal.member.domain.vo.Nickname
