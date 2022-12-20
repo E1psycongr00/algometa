@@ -69,6 +69,10 @@ public class Problem extends DateBaseEntity {
         this.content = content;
     }
 
+    public void changeCode(Code code) {
+        this.code = code;
+    }
+
     public History snapShotCode() {
         HistoryId historyId = HistoryId.nextProblemId();
         return new History(historyId, problemId, this.code);
