@@ -56,6 +56,7 @@ class ProblemControllerDocsTest {
     private static final String PROBLEM_URI = "/api/v1/problems";
     private static final String POST_ADD_PROBLEM_URI = PROBLEM_URI;
     private static final String PUT_UPDATE_CONTENT_URI = PROBLEM_URI + "/%s/contents";
+    private static final String PUT_UPDATE_CODE_URI = PROBLEM_URI + "/%s/code";
 
     @MockBean
     ProblemService problemService;
@@ -161,6 +162,40 @@ class ProblemControllerDocsTest {
             .andExpect(jsonPath("$.modified_at").exists())
             .andExpect(jsonPath("$.problem_id").exists())
             .andDo(document("put-problems/{id}/contents",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                responseFields(
+                    fieldWithPath("created_at").description("생성 날짜"),
+                    fieldWithPath("modified_at").description("수정 날짜"),
+                    fieldWithPath("problem_id").description("문제 id"))
+            ));
+    }
+
+    @Test
+    @WithMockAlgoUser
+    void updateCodeTest() throws Exception {
+        // given:
+        String input = "{\n"
+            + "    \"code\": {\n"
+            + "        \"source_code\": \"System.out.println()\",\n"
+            + "        \"lang\": \"JAVA\",\n"
+            + "        \"spend_time\": \"00:05:24\",\n"
+            + "        \"status\":\"SUCCESS\",\n"
+            + "        \"difficulty\": \"HARD\"\n"
+            + "    }\n"
+            + "}";
+
+        ProblemDto problemDto = makeProblemDto();
+        Mockito.doReturn(problemDto).when(problemService)
+            .updateProblemCode(anyLong(), any(), any());
+
+        mockMvc.perform(put(String.format(PUT_UPDATE_CODE_URI, ProblemId.nextProblemId())).contentType(
+                MediaType.APPLICATION_JSON).content(input))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.created_at").exists())
+            .andExpect(jsonPath("$.modified_at").exists())
+            .andExpect(jsonPath("$.problem_id").exists())
+            .andDo(document("put-problems/{id}/code",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 responseFields(
