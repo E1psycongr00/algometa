@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lhgpds.algometa.exception.common.BusinessException;
 import com.lhgpds.algometa.exception.dto.ResponseError;
 import java.util.Arrays;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -120,7 +121,15 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler({HttpMessageNotReadableException.class})
     private ResponseEntity<ResponseError> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException e, HttpServletRequest httpServletRequest) {
-        log.error(e.getClass().getSimpleName());
+        log.error(e.getClass().getSimpleName(), Objects.requireNonNull(e.getRootCause()).getMessage());
+
+        if (e.getRootCause() instanceof IllegalArgumentException) {
+            IllegalArgumentException illegalArgumentException = (IllegalArgumentException) e.getRootCause();
+            return ResponseEntity.badRequest()
+                .body(ResponseError.of(ErrorCode.INVALID_INPUT_VALUE,
+                    illegalArgumentException.getMessage(),
+                    httpServletRequest.getRequestURI()));
+        }
 
         if (e.getRootCause() instanceof InvalidFormatException) {
             InvalidFormatException invalidFormatException = (InvalidFormatException) e.getRootCause();
