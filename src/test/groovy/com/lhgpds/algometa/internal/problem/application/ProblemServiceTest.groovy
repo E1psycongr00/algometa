@@ -59,14 +59,6 @@ class ProblemServiceTest extends Specification {
                 .build()
     }
 
-    def checkReturnDto(ProblemDto result) {
-        assert result.getCode() != null
-        assert result.getCategory() != null
-        assert result.getPlatform() != null
-        assert result.getCreatedAt() != null
-        assert result.getModifiedAt() != null
-    }
-
     def "문제 등록 영속성 및 동작 테스트"() {
         given:
         MemberDto userDto = memberDtoBuilding()
@@ -77,7 +69,11 @@ class ProblemServiceTest extends Specification {
 
         then:
         print("result: " + result)
-        checkReturnDto(result)
+        assert result.getCode() != null
+        assert result.getCategory() != null
+        assert result.getPlatform() != null
+        assert result.getCreatedAt() != null
+        assert result.getModifiedAt() != null
     }
 
     def "문제 컨텐츠 수정 영속성 및 동작 테스트"() {
@@ -91,7 +87,11 @@ class ProblemServiceTest extends Specification {
         ProblemDto result = problemService.updateProblemContent(1L, problemDto.getProblemId(), afterContent)
 
         then:
-        checkReturnDto(result)
+        assert result.getCode() != null
+        assert result.getCategory() != null
+        assert result.getPlatform() != null
+        assert result.getCreatedAt() != null
+        assert result.getModifiedAt() != null
     }
 
     def "문제 컨텐츠 수정 id가 존재하지 않는 경우 예외 테스트"() {
@@ -120,5 +120,51 @@ class ProblemServiceTest extends Specification {
 
         then:
         thrown(AccessDeniedException.class)
+    }
+
+    def "문제 코드 수정 및 스냅샷 영속성 및 동작 테스트"() {
+        given:
+        MemberDto userDto = memberDtoBuilding()
+        ProblemDto problemDto = makeProblemDto()
+        Code afterCode = Code.of("source code", Language.JAVA, "00:12:24", Status.MLE, Difficulty.EASY)
+        problemService.addProblem(userDto, problemDto)
+
+        when:
+        ProblemDto result = problemService.updateProblemCode(userDto.getId(), problemDto.getProblemId(), afterCode)
+
+        then:
+        assert result.getCode() != null
+        assert result.getCategory() != null
+        assert result.getPlatform() != null
+        assert result.getCreatedAt() != null
+        assert result.getModifiedAt() != null
+    }
+
+    def "문제 코드 수정 및 스냅샷 권한 없는 사용자가 요청시 예외"() {
+        given:
+        MemberDto userDto = memberDtoBuilding()
+        ProblemDto problemDto = makeProblemDto()
+        Code afterCode = Code.of("source code", Language.JAVA, "00:12:24", Status.MLE, Difficulty.EASY)
+        problemService.addProblem(userDto, problemDto)
+
+        when:
+        problemService.updateProblemCode(2L, problemDto.getProblemId(), afterCode)
+
+        then:
+        thrown(AccessDeniedException.class)
+    }
+
+    def "문제 코드 수정 및 스냅샷 권한 없는 데이터가 없는 경우 예외"() {
+        given:
+        MemberDto userDto = memberDtoBuilding()
+        ProblemDto problemDto = makeProblemDto()
+        Code afterCode = Code.of("source code", Language.JAVA, "00:12:24", Status.MLE, Difficulty.EASY)
+        problemService.addProblem(userDto, problemDto)
+
+        when:
+        problemService.updateProblemCode(1L, ProblemId.nextProblemId(), afterCode)
+
+        then:
+        thrown(ProblemNotFoundException.class)
     }
 }
