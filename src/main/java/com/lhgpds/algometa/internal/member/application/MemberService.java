@@ -1,6 +1,6 @@
-package com.lhgpds.algometa.internal.member.service;
+package com.lhgpds.algometa.internal.member.application;
 
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 
 /**
  * 회원 서비스 interface

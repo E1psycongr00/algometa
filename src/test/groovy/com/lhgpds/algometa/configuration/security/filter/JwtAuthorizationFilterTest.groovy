@@ -5,7 +5,7 @@ import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser
 import com.lhgpds.algometa.internal.auth.jwt.service.JwtTokenService
 import com.lhgpds.algometa.internal.member.domain.vo.Email
 import com.lhgpds.algometa.internal.member.domain.vo.Role
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import org.springframework.http.MediaType

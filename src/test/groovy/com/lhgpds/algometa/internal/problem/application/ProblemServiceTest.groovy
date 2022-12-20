@@ -1,14 +1,14 @@
-package com.lhgpds.algometa.internal.problem.service
+package com.lhgpds.algometa.internal.problem.application
 
 import com.lhgpds.algometa.internal.member.domain.vo.Email
 import com.lhgpds.algometa.internal.member.domain.vo.Nickname
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto
 import com.lhgpds.algometa.internal.problem.domain.vo.Platform
 import com.lhgpds.algometa.internal.problem.domain.vo.code.*
 import com.lhgpds.algometa.internal.problem.domain.vo.content.Content
 import com.lhgpds.algometa.internal.problem.repository.HistoryRepository
 import com.lhgpds.algometa.internal.problem.repository.ProblemRepository
-import com.lhgpds.algometa.internal.problem.service.dto.ProblemDto
+import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest

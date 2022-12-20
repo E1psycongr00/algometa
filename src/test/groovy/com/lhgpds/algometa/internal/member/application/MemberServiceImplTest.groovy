@@ -1,4 +1,4 @@
-package com.lhgpds.algometa.internal.member.service
+package com.lhgpds.algometa.internal.member.application
 
 import com.lhgpds.algometa.exception.common.member.MemberDuplicateException
 import com.lhgpds.algometa.exception.common.member.MemberNotFoundException
@@ -8,7 +8,7 @@ import com.lhgpds.algometa.internal.member.domain.vo.ImageLink
 import com.lhgpds.algometa.internal.member.domain.vo.Nickname
 import com.lhgpds.algometa.internal.member.domain.vo.Role
 import com.lhgpds.algometa.internal.member.repository.MemberRepository
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto
 import spock.lang.Specification
 
 class MemberServiceImplTest extends Specification {

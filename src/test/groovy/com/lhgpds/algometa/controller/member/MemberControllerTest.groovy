@@ -8,8 +8,8 @@ import com.lhgpds.algometa.infra.s3.S3Uploader
 import com.lhgpds.algometa.internal.member.domain.vo.Email
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink
 import com.lhgpds.algometa.internal.member.domain.vo.Nickname
-import com.lhgpds.algometa.internal.member.service.MemberService
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto
+import com.lhgpds.algometa.internal.member.application.MemberService
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean

@@ -4,7 +4,7 @@ import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
 import com.lhgpds.algometa.internal.member.domain.vo.Email;
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
 import com.lhgpds.algometa.internal.member.domain.vo.Nickname;
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;

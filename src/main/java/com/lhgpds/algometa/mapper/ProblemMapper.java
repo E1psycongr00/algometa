@@ -3,7 +3,7 @@ package com.lhgpds.algometa.mapper;
 import com.lhgpds.algometa.controller.problem.dto.RequestAddProblem;
 import com.lhgpds.algometa.controller.problem.dto.ResponseProblemId;
 import com.lhgpds.algometa.internal.problem.domain.entity.Problem;
-import com.lhgpds.algometa.internal.problem.service.dto.ProblemDto;
+import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;

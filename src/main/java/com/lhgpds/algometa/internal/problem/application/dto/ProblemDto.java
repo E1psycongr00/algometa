@@ -1,4 +1,4 @@
-package com.lhgpds.algometa.internal.problem.service.dto;
+package com.lhgpds.algometa.internal.problem.application.dto;
 
 import com.lhgpds.algometa.internal.problem.domain.vo.Platform;
 import com.lhgpds.algometa.internal.problem.domain.vo.ProblemId;

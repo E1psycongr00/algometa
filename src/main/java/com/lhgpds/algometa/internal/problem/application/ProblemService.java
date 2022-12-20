@@ -1,11 +1,11 @@
-package com.lhgpds.algometa.internal.problem.service;
+package com.lhgpds.algometa.internal.problem.application;
 
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import com.lhgpds.algometa.internal.problem.domain.entity.History;
 import com.lhgpds.algometa.internal.problem.domain.entity.Problem;
 import com.lhgpds.algometa.internal.problem.repository.HistoryRepository;
 import com.lhgpds.algometa.internal.problem.repository.ProblemRepository;
-import com.lhgpds.algometa.internal.problem.service.dto.ProblemDto;
+import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto;
 import com.lhgpds.algometa.mapper.ProblemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

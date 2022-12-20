@@ -1,4 +1,4 @@
-package com.lhgpds.algometa.internal.member.service.dto;
+package com.lhgpds.algometa.internal.member.application.dto;
 
 import com.lhgpds.algometa.internal.member.domain.vo.Email;
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
