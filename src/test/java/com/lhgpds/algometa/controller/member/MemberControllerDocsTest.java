@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhgpds.algometa.annotation.WithMockAlgoUser;
+import com.lhgpds.algometa.configuration.jackson.JacksonConfiguration;
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter;
 import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
 import com.lhgpds.algometa.infra.s3.S3Uploader;
@@ -36,6 +37,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -48,6 +50,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest(MemberController.class)
 @ExtendWith(RestDocumentationExtension.class)
+@Import(JacksonConfiguration.class)
 class MemberControllerDocsTest {
 
     private static final String MEMBER_DOMAIN_URI = "/api/v1/members";
