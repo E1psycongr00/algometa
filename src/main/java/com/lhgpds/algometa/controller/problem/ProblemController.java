@@ -1,6 +1,7 @@
 package com.lhgpds.algometa.controller.problem;
 
 import com.lhgpds.algometa.controller.problem.dto.RequestAddProblem;
+import com.lhgpds.algometa.controller.problem.dto.RequestUpdateProblemCode;
 import com.lhgpds.algometa.controller.problem.dto.RequestUpdateProblemContent;
 import com.lhgpds.algometa.controller.problem.dto.ResponseProblemId;
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
@@ -53,6 +54,21 @@ public class ProblemController {
         MemberDto memberDto = algoUser.getMemberDto();
         ProblemDto problemDto = problemService.updateProblemContent(memberDto.getId(), problemId,
             requestUpdateProblemContent.getContent());
+        ResponseProblemId responseProblemId = ProblemMapper.instance.toResponseProblemId(
+            problemDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseProblemId);
+    }
+
+    @Secured("ROLE_USER")
+    @PutMapping("/{id}/code")
+    public ResponseEntity<ResponseProblemId> updateProblemCode(
+        @AuthenticationPrincipal AlgoUser algoUser,
+        @PathVariable(value = "id") ProblemId problemId,
+        @RequestBody @Validated RequestUpdateProblemCode requestUpdateProblemCode) {
+
+        MemberDto memberDto = algoUser.getMemberDto();
+        ProblemDto problemDto = problemService.updateProblemCode(memberDto.getId(), problemId,
+            requestUpdateProblemCode.getCode());
         ResponseProblemId responseProblemId = ProblemMapper.instance.toResponseProblemId(problemDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseProblemId);
     }
