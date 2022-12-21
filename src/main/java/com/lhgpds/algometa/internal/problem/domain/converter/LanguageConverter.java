@@ -9,11 +9,11 @@ public class LanguageConverter implements AttributeConverter<Language, String> {
 
     @Override
     public String convertToDatabaseColumn(Language language) {
-        return language.name();
+        return language == null ? null : language.name();
     }
 
     @Override
     public Language convertToEntityAttribute(String dbData) {
-        return Language.fromLanguage(dbData);
+        return dbData == null ? null : Language.fromLanguage(dbData);
     }
 }

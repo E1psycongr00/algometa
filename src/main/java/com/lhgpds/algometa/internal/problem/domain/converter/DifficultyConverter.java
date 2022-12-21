@@ -9,11 +9,11 @@ public class DifficultyConverter implements AttributeConverter<Difficulty, Strin
 
     @Override
     public String convertToDatabaseColumn(Difficulty difficulty) {
-        return difficulty.name();
+        return difficulty == null ? null : difficulty.name();
     }
 
     @Override
     public Difficulty convertToEntityAttribute(String dbData) {
-        return Difficulty.fromDifficulty(dbData);
+        return dbData == null? null : Difficulty.fromDifficulty(dbData);
     }
 }

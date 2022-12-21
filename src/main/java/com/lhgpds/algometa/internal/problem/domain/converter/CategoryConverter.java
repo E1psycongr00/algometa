@@ -9,11 +9,11 @@ public class CategoryConverter implements AttributeConverter<Category, String> {
 
     @Override
     public String convertToDatabaseColumn(Category category) {
-        return category.name();
+        return category == null ? null : category.name();
     }
 
     @Override
     public Category convertToEntityAttribute(String dbData) {
-        return Category.fromCategory(dbData);
+        return dbData == null ? null : Category.fromCategory(dbData);
     }
 }

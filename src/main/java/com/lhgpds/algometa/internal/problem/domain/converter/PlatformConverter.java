@@ -9,11 +9,11 @@ public class PlatformConverter implements AttributeConverter<Platform, String> {
 
     @Override
     public String convertToDatabaseColumn(Platform platform) {
-        return platform.name();
+        return platform == null ? null : platform.name();
     }
 
     @Override
     public Platform convertToEntityAttribute(String dbData) {
-        return Platform.fromPlatform(dbData);
+        return dbData == null ? null : Platform.fromPlatform(dbData);
     }
 }
