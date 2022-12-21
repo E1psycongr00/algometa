@@ -15,13 +15,13 @@ public class ProblemId implements PrimitiveWrapper, Serializable {
     private static final long serialVersionUID = -194445827081148241L;
 
     @Column(name = "problem_id", columnDefinition = "BINARY(16)")
-    private String id;
+    private UUID id;
 
     protected ProblemId() {
     }
 
     public ProblemId(UUID id) {
-        this.id = id.toString();
+        this.id = id;
     }
 
     public static ProblemId nextProblemId() {
@@ -31,6 +31,6 @@ public class ProblemId implements PrimitiveWrapper, Serializable {
 
     @Override
     public String toString() {
-        return id;
+        return id.toString();
     }
 }

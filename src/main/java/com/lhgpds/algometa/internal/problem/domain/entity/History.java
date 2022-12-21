@@ -20,7 +20,7 @@ public class History extends DateBaseEntity {
     private HistoryId historyId;
 
     @Embedded
-    @AttributeOverride(name = "id", column = @Column(name = "history_problem_id"))
+    @AttributeOverride(name = "id", column = @Column(name = "history_problem_id", columnDefinition = "BINARY(16)"))
     private ProblemId problemId;
 
     @Embedded
