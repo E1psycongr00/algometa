@@ -1,6 +1,7 @@
 package com.lhgpds.algometa.internal.problem.domain.vo;
 
 import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.impl.UUIDUtil;
 import com.lhgpds.algometa.configuration.jackson.vo.PrimitiveWrapper;
 import java.io.Serializable;
 import java.util.UUID;
@@ -18,6 +19,10 @@ public class ProblemId implements PrimitiveWrapper, Serializable {
     private UUID id;
 
     protected ProblemId() {
+    }
+
+    public ProblemId(String id) {
+        this.id = UUIDUtil.uuid(id);
     }
 
     public ProblemId(UUID id) {
