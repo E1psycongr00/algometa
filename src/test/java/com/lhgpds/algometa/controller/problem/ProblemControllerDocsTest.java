@@ -63,6 +63,7 @@ class ProblemControllerDocsTest {
     private static final String PUT_UPDATE_CONTENT_URI = PROBLEM_URI + "/%s/contents";
     private static final String PUT_UPDATE_CODE_URI = PROBLEM_URI + "/%s/code";
     private static final String GET_HISTORY_BY_PROBLEM_ID_URI = PROBLEM_URI + "/%s/history/";
+    private static final String GET_PROBLEM_URI = PROBLEM_URI + "/%s";
 
     @MockBean
     ProblemService problemService;
@@ -242,6 +243,36 @@ class ProblemControllerDocsTest {
             .andExpect(jsonPath("$.take_size").exists())
             .andExpect(jsonPath("$.total_pages").exists())
             .andDo(document("get-problems/{id}/history",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())
+            ));
+    }
+
+    @Test
+    @WithMockAlgoUser
+    void findProblemByProblemIdTest() throws Exception {
+        // given:
+        ProblemDto problemDto = makeProblemDto();
+        Mockito.doReturn(problemDto).when(problemService).findProblemByProblemId(problemDto.getProblemId());
+
+        // expect:
+        mockMvc.perform(get(String.format(GET_PROBLEM_URI, problemDto.getProblemId())))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.problem_id").exists())
+            .andExpect(jsonPath("$.content").exists())
+            .andExpect(jsonPath("$.content.title").exists())
+            .andExpect(jsonPath("$.content.link").exists())
+            .andExpect(jsonPath("$.content.main_text").exists())
+            .andExpect(jsonPath("$.code.source_code").exists())
+            .andExpect(jsonPath("$.code.lang").exists())
+            .andExpect(jsonPath("$.code.spend_time").exists())
+            .andExpect(jsonPath("$.code.status").exists())
+            .andExpect(jsonPath("$.code.difficulty").exists())
+            .andExpect(jsonPath("$.category").exists())
+            .andExpect(jsonPath("$.member_id").exists())
+            .andExpect(jsonPath("$.created_at").exists())
+            .andExpect(jsonPath("$.modified_at").exists())
+            .andDo(document("get-problems/{id}",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint())
             ));
