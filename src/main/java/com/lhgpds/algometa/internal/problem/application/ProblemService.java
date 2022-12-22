@@ -62,6 +62,13 @@ public class ProblemService {
         return Pages.of(histories, pageCondition, totalSize);
     }
 
+    @Transactional(readOnly = true)
+    public ProblemDto findProblemByProblemId(ProblemId problemId) {
+        Problem problem = problemRepository.findById(problemId)
+            .orElseThrow(ProblemNotFoundException::new);
+        return ProblemMapper.instance.toDto(problem);
+    }
+
     private Problem getValidProblemEntity(long memberId, ProblemId problemId) {
         Problem problem = problemRepository.findById(problemId)
             .orElseThrow(ProblemNotFoundException::new);
