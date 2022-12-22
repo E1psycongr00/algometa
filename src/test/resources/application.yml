@@ -15,6 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+        highlight_sql: true
       default_batch_fetch_size: 100
     show-sql: true
   security:
@@ -39,3 +40,11 @@ jwt:
   secret-key: linkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgoodlinkywayteamisgood
   token-period: 600000
   refresh-token-period: 2592000000
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
