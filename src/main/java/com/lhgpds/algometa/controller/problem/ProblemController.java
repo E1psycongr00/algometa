@@ -4,9 +4,12 @@ import com.lhgpds.algometa.controller.problem.dto.RequestAddProblem;
 import com.lhgpds.algometa.controller.problem.dto.RequestUpdateProblemCode;
 import com.lhgpds.algometa.controller.problem.dto.RequestUpdateProblemContent;
 import com.lhgpds.algometa.controller.problem.dto.ResponseProblemId;
+import com.lhgpds.algometa.internal.common.page.PageCondition;
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
+import com.lhgpds.algometa.internal.common.page.Pages;
 import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import com.lhgpds.algometa.internal.problem.application.ProblemService;
+import com.lhgpds.algometa.internal.problem.application.dto.HistoryDto;
 import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto;
 import com.lhgpds.algometa.internal.problem.domain.vo.ProblemId;
 import com.lhgpds.algometa.mapper.ProblemMapper;
@@ -17,11 +20,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -69,7 +74,20 @@ public class ProblemController {
         MemberDto memberDto = algoUser.getMemberDto();
         ProblemDto problemDto = problemService.updateProblemCode(memberDto.getId(), problemId,
             requestUpdateProblemCode.getCode());
-        ResponseProblemId responseProblemId = ProblemMapper.instance.toResponseProblemId(problemDto);
+        ResponseProblemId responseProblemId = ProblemMapper.instance.toResponseProblemId(
+            problemDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseProblemId);
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<Pages<HistoryDto>> findHistoryByProblemId(
+        @PathVariable(value = "id") ProblemId problemId,
+        @RequestParam(value = "pageNumber") int pageNumber,
+        @RequestParam(value = "takeSize") int takeSize) {
+
+        PageCondition pageCondition = PageCondition.of(pageNumber, takeSize);
+        Pages<HistoryDto> pages = problemService.findHistoryByProblemId(pageCondition,
+            problemId);
+        return ResponseEntity.status(HttpStatus.OK).body(pages);
     }
 }
