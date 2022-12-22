@@ -90,4 +90,13 @@ public class ProblemController {
             problemId);
         return ResponseEntity.status(HttpStatus.OK).body(pages);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProblemDto> findProblemDtoById(
+        @PathVariable(value = "id") ProblemId problemId) {
+
+        ProblemDto problemDto = problemService.findProblemByProblemId(problemId);
+        return ResponseEntity.status(HttpStatus.OK).body(problemDto);
+    }
+
 }
