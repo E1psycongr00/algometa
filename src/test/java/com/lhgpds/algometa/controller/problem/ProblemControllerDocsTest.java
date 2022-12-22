@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -19,8 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhgpds.algometa.annotation.WithMockAlgoUser;
 import com.lhgpds.algometa.configuration.jackson.JacksonConfiguration;
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter;
+import com.lhgpds.algometa.internal.common.page.PageCondition;
+import com.lhgpds.algometa.internal.common.page.Pages;
 import com.lhgpds.algometa.internal.problem.application.ProblemService;
+import com.lhgpds.algometa.internal.problem.application.dto.HistoryDto;
 import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto;
+import com.lhgpds.algometa.internal.problem.domain.vo.HistoryId;
 import com.lhgpds.algometa.internal.problem.domain.vo.Platform;
 import com.lhgpds.algometa.internal.problem.domain.vo.ProblemId;
 import com.lhgpds.algometa.internal.problem.domain.vo.code.Category;
@@ -57,6 +62,7 @@ class ProblemControllerDocsTest {
     private static final String POST_ADD_PROBLEM_URI = PROBLEM_URI;
     private static final String PUT_UPDATE_CONTENT_URI = PROBLEM_URI + "/%s/contents";
     private static final String PUT_UPDATE_CODE_URI = PROBLEM_URI + "/%s/code";
+    private static final String GET_HISTORY_BY_PROBLEM_ID_URI = PROBLEM_URI + "/%s/history/";
 
     @MockBean
     ProblemService problemService;
@@ -92,6 +98,17 @@ class ProblemControllerDocsTest {
             .modifiedAt(LocalDateTime.now())
             .platform(Platform.BACKJOON)
             .category(new LinkedHashSet<>(List.of(Category.ARRAY)))
+            .build();
+    }
+
+    private HistoryDto makeHistoryDto(ProblemId problemId) {
+        Code code = Code.of("asdf", Language.JAVA, "00:12:24", Status.FAIL, Difficulty.EASY);
+        return HistoryDto.builder()
+            .historyId(HistoryId.nextProblemId())
+            .code(code)
+            .problemId(problemId)
+            .createdAt(LocalDateTime.now())
+            .modifiedAt(LocalDateTime.now())
             .build();
     }
 
@@ -144,6 +161,7 @@ class ProblemControllerDocsTest {
     @WithMockAlgoUser
     void updateContentTest() throws Exception {
         // given:
+        ProblemId problemId = ProblemId.nextProblemId();
         String input = "{\n"
             + "    \"content\": {\n"
             + "        \"title\": \"title\",\n"
@@ -153,9 +171,10 @@ class ProblemControllerDocsTest {
             + "}";
 
         ProblemDto problemDto = makeProblemDto();
-        Mockito.doReturn(problemDto).when(problemService).updateProblemContent(anyLong(), any(), any());
+        Mockito.doReturn(problemDto).when(problemService)
+            .updateProblemContent(anyLong(), any(), any());
 
-        mockMvc.perform(put(String.format(PUT_UPDATE_CONTENT_URI, "problemID")).contentType(
+        mockMvc.perform(put(String.format(PUT_UPDATE_CONTENT_URI, problemId)).contentType(
                 MediaType.APPLICATION_JSON).content(input))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.created_at").exists())
@@ -189,8 +208,9 @@ class ProblemControllerDocsTest {
         Mockito.doReturn(problemDto).when(problemService)
             .updateProblemCode(anyLong(), any(), any());
 
-        mockMvc.perform(put(String.format(PUT_UPDATE_CODE_URI, ProblemId.nextProblemId())).contentType(
-                MediaType.APPLICATION_JSON).content(input))
+        mockMvc.perform(
+                put(String.format(PUT_UPDATE_CODE_URI, ProblemId.nextProblemId())).contentType(
+                    MediaType.APPLICATION_JSON).content(input))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.created_at").exists())
             .andExpect(jsonPath("$.modified_at").exists())
@@ -202,6 +222,28 @@ class ProblemControllerDocsTest {
                     fieldWithPath("created_at").description("생성 날짜"),
                     fieldWithPath("modified_at").description("수정 날짜"),
                     fieldWithPath("problem_id").description("문제 id"))
+            ));
+    }
+
+    @Test
+    @WithMockAlgoUser
+    void findHistoryByProblemIdTest() throws Exception {
+        // given:
+        ProblemId problemId = ProblemId.nextProblemId();
+        HistoryDto historyDto = makeHistoryDto(problemId);
+        Pages<HistoryDto> pages = Pages.of(List.of(historyDto), PageCondition.of(1, 3), 1);
+        Mockito.doReturn(pages).when(problemService).findHistoryByProblemId(any(), any());
+
+        mockMvc.perform(get(String.format(GET_HISTORY_BY_PROBLEM_ID_URI, problemId)
+                + "?pageNumber=1&takeSize=3"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.page_number").exists())
+            .andExpect(jsonPath("$.take_size").exists())
+            .andExpect(jsonPath("$.total_pages").exists())
+            .andDo(document("get-problems/{id}/history",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint())
             ));
     }
 }
