@@ -1,5 +1,6 @@
 package com.lhgpds.algometa.internal.problem.application
 
+import com.lhgpds.algometa.configuration.QueryDslConfiguration
 import com.lhgpds.algometa.exception.common.problem.ProblemNotFoundException
 import com.lhgpds.algometa.internal.member.application.dto.MemberDto
 import com.lhgpds.algometa.internal.member.domain.vo.Email
@@ -22,7 +23,7 @@ import java.time.LocalDateTime
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(ProblemService.class)
+@Import([ProblemService.class, QueryDslConfiguration.class])
 class ProblemServiceTest extends Specification {
 
     @Autowired
@@ -166,5 +167,28 @@ class ProblemServiceTest extends Specification {
 
         then:
         thrown(ProblemNotFoundException.class)
+    }
+
+    def "문제 ID를 이용해 문제 조회 테스트 실패시 예외"() {
+        when:
+        problemService.findProblemByProblemId(ProblemId.nextProblemId())
+
+        then:
+        thrown(ProblemNotFoundException.class)
+    }
+
+
+    def "문제 ID를 이용해 문제 조회 테스트"() {
+        when:
+        ProblemDto problemDto = makeProblemDto()
+        problemService.addProblem(memberDtoBuilding(), problemDto)
+        ProblemDto result = problemService.findProblemByProblemId(problemDto.getProblemId())
+
+        then:
+        assert result.getCode() != null
+        assert result.getCategory() != null
+        assert result.getPlatform() != null
+        assert result.getCreatedAt() != null
+        assert result.getModifiedAt() != null
     }
 }
