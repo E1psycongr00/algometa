@@ -7,7 +7,6 @@ import com.lhgpds.algometa.internal.problem.domain.vo.code.Code;
 import com.lhgpds.algometa.internal.problem.domain.vo.content.Content;
 import java.time.LocalDateTime;
 import java.util.Set;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class ProblemDto {
