@@ -71,11 +71,10 @@ public class ProblemService {
     }
 
     @Transactional(readOnly = true)
-    public Pages<ProblemDto> findProblems(PageCondition pageCondition, ProblemSearchCondition problemSearchCondition) {
-        List<ProblemDto> problems = problemRepository.findProblemsByCondition(
+    public Pages<ProblemDto> findProblems(PageCondition pageCondition,
+        ProblemSearchCondition problemSearchCondition) {
+        return problemRepository.findProblemsByCondition(
             pageCondition, problemSearchCondition);
-        long totalCount = problemRepository.countProblems(problemSearchCondition);
-        return Pages.of(problems, pageCondition, totalCount);
     }
 
     private Problem getValidProblemEntity(long memberId, ProblemId problemId) {
