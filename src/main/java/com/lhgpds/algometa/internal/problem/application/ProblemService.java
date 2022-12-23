@@ -6,6 +6,7 @@ import com.lhgpds.algometa.internal.common.page.Pages;
 import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import com.lhgpds.algometa.internal.problem.application.dto.HistoryDto;
 import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto;
+import com.lhgpds.algometa.internal.problem.application.dto.ProblemSearchCondition;
 import com.lhgpds.algometa.internal.problem.application.utils.ProblemAuthorityChecker;
 import com.lhgpds.algometa.internal.problem.domain.entity.History;
 import com.lhgpds.algometa.internal.problem.domain.entity.Problem;
@@ -67,6 +68,14 @@ public class ProblemService {
         Problem problem = problemRepository.findById(problemId)
             .orElseThrow(ProblemNotFoundException::new);
         return ProblemMapper.instance.toDto(problem);
+    }
+
+    @Transactional(readOnly = true)
+    public Pages<ProblemDto> findProblems(PageCondition pageCondition, ProblemSearchCondition problemSearchCondition) {
+        List<ProblemDto> problems = problemRepository.findProblemsByCondition(
+            pageCondition, problemSearchCondition);
+        long totalCount = problemRepository.countProblems(problemSearchCondition);
+        return Pages.of(problems, pageCondition, totalCount);
     }
 
     private Problem getValidProblemEntity(long memberId, ProblemId problemId) {
