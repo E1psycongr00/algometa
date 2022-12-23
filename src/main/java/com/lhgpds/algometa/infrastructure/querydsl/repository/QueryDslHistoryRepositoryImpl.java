@@ -20,7 +20,7 @@ public class QueryDslHistoryRepositoryImpl implements QueryDslHistoryRepository 
     @Override
     public List<HistoryDto> findHistoriesByProblemId(PageCondition pageCondition,
         ProblemId problemId) {
-        return queryFactory.select(Projections.fields(HistoryDto.class,
+        return queryFactory.select(Projections.constructor(HistoryDto.class,
                 history.historyId,
                 history.problemId,
                 history.code,
