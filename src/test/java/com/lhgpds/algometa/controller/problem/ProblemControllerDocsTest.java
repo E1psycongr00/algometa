@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhgpds.algometa.annotation.WithMockAlgoUser;
 import com.lhgpds.algometa.configuration.jackson.JacksonConfiguration;
 import com.lhgpds.algometa.configuration.security.filter.JwtAuthorizationFilter;
+import com.lhgpds.algometa.configuration.web.WebConfiguration;
 import com.lhgpds.algometa.internal.common.page.PageCondition;
 import com.lhgpds.algometa.internal.common.page.Pages;
 import com.lhgpds.algometa.internal.problem.application.ProblemService;
@@ -55,7 +56,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @WebMvcTest(ProblemController.class)
 @ExtendWith(RestDocumentationExtension.class)
-@Import(JacksonConfiguration.class)
+@Import({JacksonConfiguration.class, WebConfiguration.class})
 class ProblemControllerDocsTest {
 
     private static final String PROBLEM_URI = "/api/v1/problems";
@@ -236,7 +237,7 @@ class ProblemControllerDocsTest {
         Mockito.doReturn(pages).when(problemService).findHistoryByProblemId(any(), any());
 
         mockMvc.perform(get(String.format(GET_HISTORY_BY_PROBLEM_ID_URI, problemId)
-                + "?pageNumber=1&takeSize=3"))
+                + "?page_number=1&take_size=3"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").exists())
             .andExpect(jsonPath("$.page_number").exists())
@@ -277,4 +278,5 @@ class ProblemControllerDocsTest {
                 preprocessResponse(prettyPrint())
             ));
     }
+
 }
