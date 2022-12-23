@@ -4,14 +4,17 @@ import com.lhgpds.algometa.controller.problem.dto.RequestAddProblem;
 import com.lhgpds.algometa.controller.problem.dto.RequestUpdateProblemCode;
 import com.lhgpds.algometa.controller.problem.dto.RequestUpdateProblemContent;
 import com.lhgpds.algometa.controller.problem.dto.ResponseProblemId;
-import com.lhgpds.algometa.internal.common.page.PageCondition;
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
+import com.lhgpds.algometa.internal.common.page.PageCondition;
 import com.lhgpds.algometa.internal.common.page.Pages;
 import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import com.lhgpds.algometa.internal.problem.application.ProblemService;
 import com.lhgpds.algometa.internal.problem.application.dto.HistoryDto;
 import com.lhgpds.algometa.internal.problem.application.dto.ProblemDto;
+import com.lhgpds.algometa.internal.problem.application.dto.ProblemSearchCondition;
 import com.lhgpds.algometa.internal.problem.domain.vo.ProblemId;
+import com.lhgpds.algometa.internal.problem.domain.vo.code.Difficulty;
+import com.lhgpds.algometa.internal.problem.domain.vo.code.Language;
 import com.lhgpds.algometa.mapper.ProblemMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -82,8 +85,8 @@ public class ProblemController {
     @GetMapping("/{id}/history")
     public ResponseEntity<Pages<HistoryDto>> findHistoryByProblemId(
         @PathVariable(value = "id") ProblemId problemId,
-        @RequestParam(value = "pageNumber") int pageNumber,
-        @RequestParam(value = "takeSize") int takeSize) {
+        @RequestParam(value = "page_number") int pageNumber,
+        @RequestParam(value = "take_size") int takeSize) {
 
         PageCondition pageCondition = PageCondition.of(pageNumber, takeSize);
         Pages<HistoryDto> pages = problemService.findHistoryByProblemId(pageCondition,
@@ -92,11 +95,26 @@ public class ProblemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProblemDto> findProblemDtoById(
+    public ResponseEntity<ProblemDto> findProblemById(
         @PathVariable(value = "id") ProblemId problemId) {
 
         ProblemDto problemDto = problemService.findProblemByProblemId(problemId);
         return ResponseEntity.status(HttpStatus.OK).body(problemDto);
     }
 
+    @GetMapping
+    public ResponseEntity<Pages<ProblemDto>> findProblems(
+        @RequestParam(value = "page_number") int pageNumber,
+        @RequestParam(value = "take_size") int takeSize,
+        @RequestParam(value = "problem_id", required = false) ProblemId problemId,
+        @RequestParam(value = "lang", required = false) Language language,
+        @RequestParam(value = "difficulty", required = false) Difficulty difficulty) {
+
+        PageCondition pageCondition = PageCondition.of(pageNumber, takeSize);
+        ProblemSearchCondition problemSearchCondition = new ProblemSearchCondition(problemId,
+            language, difficulty);
+        Pages<ProblemDto> pages = problemService.findProblems(pageCondition,
+            problemSearchCondition);
+        return ResponseEntity.status(HttpStatus.OK).body(pages);
+    }
 }
