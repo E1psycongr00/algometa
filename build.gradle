@@ -69,6 +69,14 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
 
+//	// Querydsl JPAAnnotationProcessor 사용 지정
+//	annotationProcessor"com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+//	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+//	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
+	// uuid generator github: https://github.com/cowtowncoder/java-uuid-generator
+	implementation group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.0.1'
+
 	// spock
 	testImplementation 'org.spockframework.spock:spock-core:spock-2.3'
 	testImplementation 'org.spockframework.spock:spock-spring:spock-2.3'
