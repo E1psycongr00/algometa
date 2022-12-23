@@ -9,9 +9,8 @@ import com.lhgpds.algometa.internal.member.domain.entity.Member;
 import com.lhgpds.algometa.internal.member.domain.vo.Email;
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
 import com.lhgpds.algometa.internal.member.domain.vo.Nickname;
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 

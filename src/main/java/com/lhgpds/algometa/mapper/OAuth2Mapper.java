@@ -1,7 +1,7 @@
 package com.lhgpds.algometa.mapper;
 
 import com.lhgpds.algometa.internal.member.domain.vo.Email;
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

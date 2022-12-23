@@ -5,11 +5,11 @@ import com.lhgpds.algometa.controller.member.dto.RequestUpdateProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseMyProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseProfile;
 import com.lhgpds.algometa.controller.member.dto.ResponseUploadImage;
-import com.lhgpds.algometa.infra.s3.S3Uploader;
+import com.lhgpds.algometa.infrastructure.s3.S3Uploader;
 import com.lhgpds.algometa.internal.auth.jwt.principal.AlgoUser;
 import com.lhgpds.algometa.internal.member.domain.vo.ImageLink;
-import com.lhgpds.algometa.internal.member.service.MemberService;
-import com.lhgpds.algometa.internal.member.service.dto.MemberDto;
+import com.lhgpds.algometa.internal.member.application.MemberService;
+import com.lhgpds.algometa.internal.member.application.dto.MemberDto;
 import com.lhgpds.algometa.mapper.MemberMapper;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
-@RestControllerAdvice
+@RestController
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
 public class MemberController {
