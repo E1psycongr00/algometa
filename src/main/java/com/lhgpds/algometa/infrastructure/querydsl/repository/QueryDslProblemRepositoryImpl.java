@@ -53,6 +53,7 @@ public class QueryDslProblemRepositoryImpl implements QueryDslProblemRepository 
                         problem.modifiedAt))
             );
         Long count = queryFactory.select(problem.count())
+            .from(problem)
             .where(
                 eqProblemId(problemSearchCondition.getProblemId()),
                 eqLanguage(problemSearchCondition.getLanguage()),
