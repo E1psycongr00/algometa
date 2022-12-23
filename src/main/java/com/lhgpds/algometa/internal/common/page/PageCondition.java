@@ -3,10 +3,12 @@ package com.lhgpds.algometa.internal.common.page;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class PageCondition {
 
     private int pageNumber;
